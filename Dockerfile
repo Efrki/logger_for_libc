@@ -4,7 +4,11 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     gdb \
     man-db \
-    Docker
+    Docker \
+    clang-format \
+    clangd \
+    cmake \
+    make
 
 WORKDIR /app
 
