@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <stddef.h>
 #include <sys/types.h>
@@ -23,6 +24,14 @@ typedef enum {
     LOG_TYPE_FREE,
 
 } LogType;
+
+typedef enum {
+    SEMOP_ERROR = 1,
+    FTOK_ERROR,
+    SEMGET_ERROR,
+    SHMGET_ERROR,
+    SHMAT_ERROR
+} Errors;
 
 typedef struct {
     char filename[MAX_PATH_LEN];
@@ -95,3 +104,5 @@ typedef struct {
 
     LogEntry entries[LOG_BUFFER_CAPACITY];
 } SharedLogBuffer;
+
+#endif // COMMON_H
