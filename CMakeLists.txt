@@ -1,24 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
+project(logger_for_libc C)
 
-project(LibCLogger C)
-
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-add_compile_options(-Wall -Wextra)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(logger SHARED logger.c)
+target_link_libraries(logger dl)
+target_include_directories(logger PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(logger PRIVATE dl)
+add_executable(daemon reader.c)
+target_include_directories(daemon PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(test test.c)
 
-add_executable(reader reader.c)
-
-add_custom_target(run
-    COMMAND env "LD_PRELOAD=$<TARGET_FILE:logger>" $<TARGET_FILE:test>
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Running test with LD_PRELOAD..."
-    VERBATIM
-)
-
-add_dependencies(run test)
+include(CPack)
+set(CPACK_PACKAGE_NAME "logger-for-libc")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "you@example.com")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "LD_PRELOAD-based libc call logger")
+set(CPACK_PACKAGE_CONTACT "you@example.com")

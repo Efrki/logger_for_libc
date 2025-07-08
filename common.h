@@ -2,13 +2,12 @@
 #define COMMON_H
 
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/types.h>
-#include <sys/sem.h>
 #include <time.h>
 
 #define IPC_KEY_PATH "/tmp"
 #define IPC_PROJ_ID 'L'
-
 #define LOG_BUFFER_CAPACITY 256
 #define MAX_PATH_LEN 256
 #define MAX_COMM_LEN 16
@@ -22,16 +21,7 @@ typedef enum {
     LOG_TYPE_MALLOC,
     LOG_TYPE_REALLOC,
     LOG_TYPE_FREE,
-
 } LogType;
-
-typedef enum {
-    SEMOP_ERROR = 1,
-    FTOK_ERROR,
-    SEMGET_ERROR,
-    SHMGET_ERROR,
-    SHMAT_ERROR
-} Errors;
 
 typedef struct {
     char filename[MAX_PATH_LEN];
@@ -85,8 +75,7 @@ typedef struct {
     char comm[MAX_COMM_LEN];
     struct timespec timestamp;
     LogType type;
-
-    union{
+    union {
         OpenLog open_log;
         CloseLog close_log;
         LseekLog lseek_log;
@@ -101,7 +90,6 @@ typedef struct {
 typedef struct {
     volatile size_t head;
     volatile size_t tail;
-
     LogEntry entries[LOG_BUFFER_CAPACITY];
 } SharedLogBuffer;
 
